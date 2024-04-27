@@ -1,0 +1,10 @@
+calibre_books.json
+device_to_calibre_mapping.json
+metadata.calibre
+parsed_highlights.json
+test.ipynb
+build/*
+dist/*
+main.spec
+My Clippings.txt
+main.exe
