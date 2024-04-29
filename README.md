@@ -1,12 +1,12 @@
-### Technical Documentation for Book Highlight Mapping Program
+## Technical Documentation for Book Highlight Mapping Program
 
 This document provides an overview of a Python program designed to automate the management of book highlights. The program facilitates the parsing of highlights from Kindle devices, matching these highlights to books in the Calibre library, and further handling the matched data for user interactions. This comprehensive tool is particularly useful for individuals looking to streamline their digital reading workflow and synchronize their highlights across different platforms.
 
-#### Program Overview
+### Program Overview
 
 The program consists of several key functions that work together to parse highlight data, match it to a digital library, and interact with the user for verification and viewing purposes. Each part of the program leverages Python's powerful libraries to handle file I/O, string manipulation, regular expressions, and subprocess management.
 
-#### Modules and Libraries Used
+### Modules and Libraries Used
 
 1. **JSON**: Used for parsing and saving data in JSON format, which is a lightweight data interchange format.
 2. **re (Regular Expressions)**: Utilized to manipulate strings by replacing special characters and formatting strings as needed.
@@ -16,7 +16,7 @@ The program consists of several key functions that work together to parse highli
 6. **pyperclip**: Manages the system clipboard to copy and paste text during automated GUI interactions.
 7. **time**: Provides timing functions to manage delays in automation sequences to ensure synchronization with GUI responses.
 
-#### Function Descriptions
+### Function Descriptions
 
 1. **parse_clippings(file_path, remove_duplicates)**:
    - **Purpose**: Parses the 'My Clippings.txt' from a Kindle device, extracting book titles, locations, timestamps, and highlights.
@@ -46,15 +46,49 @@ The program consists of several key functions that work together to parse highli
    - **Purpose**: Automates the search and highlighting of specific texts within the Calibre viewer using GUI automation tools.
    - **Outputs**: A list of highlights that were not found or correctly confirmed by the user.
 
-#### Workflow
+### Workflow
 
 1. **Data Parsing**: The program starts by parsing highlight data from a Kindle device.
 2. **Data Matching**: Using the parsed data and metadata from the Calibre library, the program performs fuzzy matching to align highlights with library books.
 3. **User Interaction**: Through GUI automation, the program facilitates the viewing and manual confirmation of these highlights within the Calibre viewer.
 4. **Output Generation**: Throughout the process, structured data is saved to JSON files for persistence and further analysis.
 
-#### Future Enhancements
+### Tips
+
+1. If your book in Calibre has more than one version or format, ex. EPUB and MOBI, you could inform the program to which version to use by adjusting its path in `device_to_calibre_mapping.json` to be the first in title.
+
+```JSON
+[
+   {
+      ...
+      ...
+      ...
+      "book_path": [
+         "path/to/book.mobi"
+         "path/to/book.epub",
+        ],
+   }
+]
+```
+If you would like to Highlight the EPUB version, reorder it to be the first path, like below
+
+```JSON
+[
+   {
+      ...
+      ...
+      ...
+      "book_path": [
+         "path/to/book.epub",
+         "path/to/book.mobi"
+        ],
+   }
+]
+```
+
+### Future Enhancements
 
 1. **User Interface**: Develop a GUI to make the program more accessible to non-technical users.
 2. **Performance Optimization**: Optimize file reading and writing operations and improve the efficiency of string manipulations and regex operations.
 3. **Expanded Compatibility**: Extend compatibility to more devices and formats, potentially integrating direct eBook formats beyond Kindle.
+
