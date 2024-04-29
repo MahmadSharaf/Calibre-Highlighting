@@ -201,16 +201,17 @@ def find_best_match_book_id_and_save(
         if best_match:
             # Retrieve matching book details from Calibre
             book_id = calibre_metadata[best_match[0]]
-            match_info = {
-                "device_title": highlight_title,
-                "calibre_title": best_match[0],
-                "mapped_title": title_to_details[book_id]["title"],
-                "book_id": book_id,
-                "matched_score": best_match[1],
-                "book_path": title_to_details[book_id]["path"],
-                "highlights": highlights,
-            }
-            matches.append(match_info)
+            if book_id:
+                match_info = {
+                    "device_title": highlight_title,
+                    "calibre_title": best_match[0],
+                    "mapped_title": title_to_details[book_id]["title"],
+                    "book_id": book_id,
+                    "matched_score": best_match[1],
+                    "book_path": title_to_details[book_id]["path"],
+                    "highlights": highlights,
+                }
+                matches.append(match_info)
 
     # Save the matched data to a JSON file
     with open("device_to_calibre_mapping.json", "w", encoding="utf-8") as file:
@@ -275,11 +276,6 @@ def perform_text_operations(highlight_texts):
         )
     else:
         pyautogui.alert(f"All highlights applied successfully")
-    # screenshot = pyautogui.screenshot()
-    # Use pytesseract to extract text from the screenshot
-    # texts = pytesseract.image_to_string(screenshot)
-    # time.sleep(1)  # Wait for paste to complete
-    # time.sleep(1)  # Wait for operation to complete
     return highlights_not_found
 
 
@@ -403,144 +399,5 @@ def main():
     else:
         print("All highlights were successfully found and marked.")
 
-
 if __name__ == "__main__":
     main()
-
-
-# def main():
-#     """
-#     Main program to handle workflow of parsing, matching, and highlighting books in Calibre.
-#     """
-#     print("Welcome to the Calibre Highlight Automation Tool.\n")
-
-#     # Getting the path for 'My Clippings.txt'
-#     clippings_path = (
-#     input(
-#         'Enter "My Clippings.txt" path or press Enter if it is located in root:\n'
-#     ).strip()
-#     or "My Clippings.txt"
-#     )
-
-#     # Whether to remove duplicated highlights
-#     is_remove_duplicates = input(
-#         'Enter "Y" or "y" to remove duplicated highlights:\n'
-#     ).strip()
-
-#     is_remove_duplicates = bool(is_remove_duplicates in ("Y", "y")):
-
-#     parse_clippings(clippings_path, is_remove_duplicates)
-
-#     # Getting the path for 'metadata.calibre'
-#     calibre_metadata_path = (
-#         input(
-#             'Enter "metadata.calibre" path or press Enter if it is located in the root:\n'
-#         ).strip()
-#         or "metadata.calibre"
-#     )
-#     calibre_metadata = read_calibre_device_metadata(calibre_metadata_path)
-
-#     # Fetch and save all books data from Calibre library
-#     if not list_all_books_and_save():
-#         print("Failed to retrieve book data from Calibre. Make sure there is no other calibre program such as calibre-server.exe or the main calibre program is running.")
-#         return
-
-#     # Match and save device to Calibre mappings
-#     matches = find_best_match_book_id_and_save("parsed_highlights.json", "calibre_books.json", calibre_metadata)
-
-#     # Display matched results
-#     print("{:<8} {:<14} {:<16} {:<100}".format('Book ID','Matching Score', 'Total Highlights','Title'))
-#     for book in matches:
-#         print("{:<8} {:<14} {:<16} {:<100}".format(book['book_id'], book['matched_score'], len(book['highlights']), book['device_title']))
-
-#     # Get book ID to preform highlighting automation
-#     book_id = int(input("Enter Book ID: ").strip())
-
-#     # Get book path and highlights
-#     for book in matches:
-#         if book['book_id'] == book_id:
-#             book_highlights = [highlight['highlight'] for highlight in book["highlights"]]
-#             book_path = book["book_path"][0]
-#             break
-
-#     print("Opening book in Calibre Book Viewer ...")
-#     open_book_in_calibre_viewer(book_path)
-#     print("Book is open")
-#     print("Highlighting is in progress....")
-
-#     highlights_not_found = perform_text_operations(book_highlights)
-#     print("Those highlights are")
-
-#     print(highlights_not_found)
-
-
-# print(
-#     """
-#         This program automates highlighting a book in Calibre library by providing the highlights in JSON format.
-#         If your source of highlights is Kindle, this program could parse `My Clippings.txt` to JSON format.
-
-#         The JSON format is:
-
-#         {
-#             "{Book Name}": [
-#                 {
-#                     "highlight": "Highlight 1",
-#                 },
-#                 {
-#                     "highlight": "Highlight 2",
-#                 },
-#                 {
-#                     "highlight": "Highlight 3",
-#                 },
-#                 {
-#                     "highlight": "Highlight 4",
-#                 },
-#             ],
-#         }
-#       """
-# )
-
-
-# clippings_path = (
-#     input(
-#         'Enter "My Clippings.txt" path or leave it empty if it is located in root:\n'
-#     ).strip()
-#     or "My Clippings.txt"
-# )
-# parse_clippings(clippings_path,True)
-
-# calibre_metadata_path = (
-#     input(
-#         'Enter "metadata.calibre" path or leave it empty if it is located in root:\n'
-#     ).strip()
-#     or "metadata.calibre"
-# )
-# calibre_metadata = read_calibre_device_metadata(calibre_metadata_path)
-
-# list_all_books_and_save()
-
-# matches = find_best_match_book_id_and_save(
-#     "parsed_highlights.json", "calibre_books.json", calibre_metadata
-# )
-
-# print("{:<8} {:<14} {:<16} {:<100}".format('Book ID','Matching Score', 'Total Highlights','Title'))
-# for book in matches:
-#     print("{:<8} {:<14} {:<16} {:<100}".format(book['book_id'], book['matched_score'], len(book['highlights']), book['device_title']))
-
-# book_id = int(input("Enter Book ID: ").strip())
-
-# for book in matches:
-#     if book['book_id'] == book_id:
-#         book_highlights = [highlight['highlight'] for highlight in book["highlights"]]
-#         book_path = book["book_path"][0]
-#         break
-
-# print("Opening book in Calibre Book Viewer ...")
-# open_book_in_calibre_viewer(book_path)
-# print("Book is open")
-# print("Highlighting is in progress....")
-
-# highlights_not_found = perform_text_operations(book_highlights)
-# print("Those highlights are")
-
-# print(highlights_not_found)
